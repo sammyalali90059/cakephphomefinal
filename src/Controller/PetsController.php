@@ -44,6 +44,36 @@ class PetsController extends AppController
         $this->set(compact('pets', 'user'));
     }
 
-
+    public function getPetsByUser($userId) {
+        $pets = $this->Pets->find('all', [
+            'conditions' => ['user_id' => $userId],
+        ]);
+        $this->set([
+            'pets' => $pets,
+            '_serialize' => ['pets']
+        ]);
+    }
+    public function deletePet($id) {
+        $this->Pets->delete($this->Pets->get($id));
+        $message = 'Deleted';
+        $this->set([
+            'message' => $message,
+            '_serialize' => ['message']
+        ]);
+    }
+    
+    public function addPet() {
+        $pet = $this->Pets->newEntity();
+        $pet = $this->Pets->patchEntity($pet, $this->request->getData());
+        if ($this->Pets->save($pet)) {
+            $message = 'Saved';
+        } else {
+            $message = 'Error';
+        }
+        $this->set([
+            'message' => $message,
+            '_serialize' => ['message']
+        ]);
+    }
     
 }
