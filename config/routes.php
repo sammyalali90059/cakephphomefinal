@@ -80,9 +80,6 @@ return static function (RouteBuilder $routes) {
 $routes->connect('/users', ['controller' => 'Users', 'action' => 'users']);
 $routes->connect('/pet/edit/*', ['controller' => 'Users', 'action' => 'edit']);
 $routes->delete('/pet/delete/*', ['controller' => 'Users', 'action' => 'delete']);
-$routes->get('/api/pets/user/:userId', ['controller' => 'Pets', 'action' => 'getPetsByUser']);
-$routes->delete('/api/pets/:petId', ['controller' => 'Pets', 'action' => 'deletePet']);
-$routes->post('/api/pets', ['controller' => 'Pets', 'action' => 'addPet']);
 
 
 

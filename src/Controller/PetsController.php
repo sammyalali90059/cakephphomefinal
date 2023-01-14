@@ -3,6 +3,25 @@ namespace App\Controller;
 
 class PetsController extends AppController
 {
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('RequestHandler');
+        $this->loadComponent('Csrf');
+        $this->Csrf->config('secure', false);
+    }
+
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        // Configure the login action to not require authentication, preventing
+        // the infinite redirect loop issue
+        $this->Authentication->addUnauthenticatedActions(['getPetsByUser', 'addPet', 'deletePet']);
+        $this->eventManager()->off($this->Csrf);
+}
+
+
     public function view($name)
     {
         $petsTable = $this->fetchTable("pets");
@@ -44,36 +63,6 @@ class PetsController extends AppController
         $this->set(compact('pets', 'user'));
     }
 
-    public function getPetsByUser($userId) {
-        $pets = $this->Pets->find('all', [
-            'conditions' => ['user_id' => $userId],
-        ]);
-        $this->set([
-            'pets' => $pets,
-            '_serialize' => ['pets']
-        ]);
-    }
-    public function deletePet($id) {
-        $this->Pets->delete($this->Pets->get($id));
-        $message = 'Deleted';
-        $this->set([
-            'message' => $message,
-            '_serialize' => ['message']
-        ]);
-    }
-    
-    public function addPet() {
-        $pet = $this->Pets->newEntity();
-        $pet = $this->Pets->patchEntity($pet, $this->request->getData());
-        if ($this->Pets->save($pet)) {
-            $message = 'Saved';
-        } else {
-            $message = 'Error';
-        }
-        $this->set([
-            'message' => $message,
-            '_serialize' => ['message']
-        ]);
-    }
+
     
 }
