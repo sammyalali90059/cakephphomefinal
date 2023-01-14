@@ -84,10 +84,6 @@ $routes->delete('/api/pets/:petId', ['controller' => 'Api', 'action' => 'deleteP
 $routes->post('/api/pets', ['controller' => 'Api', 'action' => 'addPet']);
 
 
-$routes->get('/pets/user/:user_id', ['controller' => 'Pets', 'action' => 'getPetsByUser']);
-$routes->delete('/pets/:id', ['controller' => 'Pets', 'action' => 'deletePet']);
-$routes->post('/pets', ['controller' => 'Pets', 'action' => 'addPet']);
-
 
 
         
