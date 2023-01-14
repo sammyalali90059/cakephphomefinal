@@ -43,5 +43,44 @@ class PetsController extends AppController
         // Pass the pets to the view
         $this->set(compact('pets', 'user'));
     }
+
+    public function getPetsByUser($userId)
+    {
+        $this->request->getParam('_csrfToken', true);
+
+        $petsTable = $this->getTableLocator()->get('Pets');
+        $pets = $petsTable->find()->where(['users_id' => $userId])->all();
+        $this->set(compact('pets'));
+        $this->set('_serialize', 'pets');
+    }
+
+    public function deletePet($petId)
+    {
+        $this->request->getParam('_csrfToken', true);
+
+        $petsTable = $this->getTableLocator()->get('Pets');
+        $pet = $petsTable->get($petId);
+        $petsTable->delete($pet);
+        $response = new Response();
+        $response = $response->withStatus(204);
+        return $response;
+    }
+
+    public function addPet() {
+        $this->request->getParam('_csrfToken', true);
+
+      $petsTable = $this->fetchTable("pets");
+      $pet = $petsTable->newEntity();
+      if ($this->request->is('post')) {
+          $pet = $petsTable->patchEntity($pet, $this->request->getData());
+          $pet->users_id = $this->Auth->user('id');
+          if ($petsTable->save($pet)) {
+              $this->set(compact('pet'));
+              $this->set('_serialize', ['pet']);
+          } else {
+              throw new BadRequestException("Could not save pet.");
+          }
+      }
+  }
     
 }
